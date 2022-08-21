@@ -1,21 +1,26 @@
-package hello.kakaoauth;
+package hello.kakaoauth.application;
 
+import hello.kakaoauth.KakaoUser;
+import hello.kakaoauth.domain.AccessCode;
+import hello.kakaoauth.domain.AccessToken;
+import hello.kakaoauth.domain.KakaoClient;
+import hello.kakaoauth.domain.KakaoUserInfo;
+import hello.kakaoauth.domain.KakaoUserRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class KakaoLoginService {
-    private final KakaoLoginClient kakaoLoginClient;
+    private final KakaoClient kakaoLoginClient;
     private final KakaoUserRepository kakaoUserRepository;
+    private final String clientId = "";
 
-    public KakaoLoginService(KakaoLoginClient kakaoLoginClient, KakaoUserRepository kakaoUserRepository) {
+    public KakaoLoginService(KakaoClient kakaoLoginClient, KakaoUserRepository kakaoUserRepository) {
         this.kakaoLoginClient = kakaoLoginClient;
         this.kakaoUserRepository = kakaoUserRepository;
     }
 
     public void sendLoginPage() {
-        kakaoLoginClient.sendLoginPage();
+        kakaoLoginClient.sendLoginPage(clientId, "/kakao/login", "code");
     }
 
     public String loginWithAccessCode(AccessCode code) {
@@ -27,7 +32,7 @@ public class KakaoLoginService {
         KakaoUserInfo userInfo = kakaoLoginClient.getUserInfo(authorizationToken);
 
         KakaoUser member = kakaoUserRepository.findByEmail(userInfo.getEmail())
-            .orElse(kakaoUserRepository.save(new KakaoUser(userInfo.getId(), userInfo.getNickname(), userInfo.getProfileImageUrl(), userInfo.getThumbnailImageUrl())));
+            .orElse(kakaoUserRepository.save(new KakaoUser(userInfo.getId(), userInfo.getNickname(), userInfo.getEmail(), userInfo.getProfileImageUrl(), userInfo.getThumbnailImageUrl())));
 
         member.saveAccessCode(accessToken);
         return authorizationToken;

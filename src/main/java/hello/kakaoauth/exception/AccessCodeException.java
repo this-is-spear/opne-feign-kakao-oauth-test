@@ -1,4 +1,4 @@
-package hello.kakaoauth;
+package hello.kakaoauth.exception;
 
 public class AccessCodeException extends RuntimeException {
     public AccessCodeException(String message) {

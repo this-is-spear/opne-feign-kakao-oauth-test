@@ -1,5 +1,11 @@
-package hello.kakaoauth;
+package hello.kakaoauth.application;
 
+import hello.kakaoauth.KakaoUser;
+import hello.kakaoauth.domain.AccessCode;
+import hello.kakaoauth.domain.AccessToken;
+import hello.kakaoauth.domain.KakaoClient;
+import hello.kakaoauth.domain.KakaoUserInfo;
+import hello.kakaoauth.domain.KakaoUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +26,7 @@ import static org.mockito.Mockito.when;
 class KakaoLoginServiceTest {
 
     @Mock
-    KakaoLoginClient kakaoLoginClient;
+    KakaoClient kakaoLoginClient;
 
     @Mock
     KakaoUserRepository kakaoUserRepository;
@@ -34,11 +40,11 @@ class KakaoLoginServiceTest {
     @Test
     @DisplayName("로그인 페이지로 이동합니다.")
     void sendLoginPage() {
-        doNothing().when(kakaoLoginClient).sendLoginPage();
+        doNothing().when(kakaoLoginClient).sendLoginPage(any(), any(), any());
 
         kakaoLoginService.sendLoginPage();
 
-        verify(kakaoLoginClient, atLeastOnce()).sendLoginPage();
+        verify(kakaoLoginClient, atLeastOnce()).sendLoginPage(any(), any(), any());
     }
 
     @Test
@@ -58,7 +64,7 @@ class KakaoLoginServiceTest {
         );
 
         when(kakaoUserRepository.findByEmail("email@email.com")).thenReturn(Optional.empty());
-        when(kakaoUserRepository.save(any())).thenReturn(new KakaoUser(1234L, "this", "/url", "url"));
+        when(kakaoUserRepository.save(any())).thenReturn(new KakaoUser(1234L, "this", "", "/url", "url"));
 
         kakaoLoginService.loginWithAccessCode(new AccessCode("code"));
     }
@@ -79,7 +85,8 @@ class KakaoLoginServiceTest {
             new KakaoUserInfo(1234L, "this", "/url", "/url", "email@email.com")
         );
 
-        when(kakaoUserRepository.findByEmail("email@email.com")).thenReturn(Optional.of(new KakaoUser(1234L, "this", "/url", "url")));
+        when(kakaoUserRepository.findByEmail("email@email.com"))
+            .thenReturn(Optional.of(new KakaoUser(1234L, "this", "email@email.com", "/url", "url")));
 
         kakaoLoginService.loginWithAccessCode(new AccessCode("code"));
     }

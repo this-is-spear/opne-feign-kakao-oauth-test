@@ -1,4 +1,4 @@
-package hello.kakaoauth;
+package hello.kakaoauth.domain;
 
 import java.util.Objects;
 

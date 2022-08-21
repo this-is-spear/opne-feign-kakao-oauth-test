@@ -1,5 +1,8 @@
-package hello.kakaoauth;
+package hello.kakaoauth.ui;
 
+import hello.kakaoauth.domain.AccessCode;
+import hello.kakaoauth.exception.AccessCodeException;
+import hello.kakaoauth.application.KakaoLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;

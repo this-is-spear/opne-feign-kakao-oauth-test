@@ -1,5 +1,8 @@
-package hello.kakaoauth;
+package hello.kakaoauth.ui;
 
+import hello.kakaoauth.domain.AccessCode;
+import hello.kakaoauth.exception.AccessCodeException;
+import hello.kakaoauth.application.KakaoLoginService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class KakaoLoginControllerTest {
@@ -37,7 +41,7 @@ class KakaoLoginControllerTest {
     @Test
     @DisplayName("인가 코드를 이용해 로그인을 진행합니다.")
     void loginWithAccessCode() {
-        doNothing().when(kakaoLoginService).loginWithAccessCode(any());
+        when(kakaoLoginService.loginWithAccessCode(any())).thenReturn(any());
 
         kakaoLoginController.loginWithAccessCode(new AccessCode("thisiscode"), null, null);
 
